@@ -3,19 +3,13 @@ import { MOCK_DRIVERS, MOCK_PARTNERS, DEFAULT_HERO_IMAGES } from '../constants';
 import { DriverCard } from '../components/DriverCard';
 import { PartnerCard } from '../components/PartnerCard';
 import { Button } from '../components/Button';
-import { geminiService } from '../services/geminiService';
-import { Search, Sparkles, Filter, School, MapPin, X, AlertCircle } from 'lucide-react';
+import { Search, Filter, School, MapPin, X, AlertCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export const Home: React.FC = () => {
   // Carousel State
   const [currentSlide, setCurrentSlide] = useState(0);
   const [heroImages, setHeroImages] = useState<string[]>(DEFAULT_HERO_IMAGES);
-
-  // AI Search State
-  const [searchQuery, setSearchQuery] = useState('');
-  const [aiResponse, setAiResponse] = useState('');
-  const [isAiLoading, setIsAiLoading] = useState(false);
 
   // Filter State
   const [selectedSchool, setSelectedSchool] = useState('');
@@ -98,19 +92,10 @@ export const Home: React.FC = () => {
     return () => clearInterval(timer);
   }, [heroImages.length]);
 
-  const handleAiSearch = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!searchQuery.trim()) return;
-
-    setIsAiLoading(true);
-    setAiResponse('');
-    try {
-      const result = await geminiService.findBestMatch(searchQuery, MOCK_DRIVERS);
-      setAiResponse(result);
-    } catch (err) {
-      setAiResponse("Não foi possível conectar ao assistente no momento.");
-    } finally {
-      setIsAiLoading(false);
+  const scrollToDrivers = () => {
+    const element = document.getElementById('drivers-list');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
@@ -147,50 +132,26 @@ export const Home: React.FC = () => {
             Conectamos pais a motoristas qualificados. Encontre o transporte ideal para seu filho ou aproveite benefícios exclusivos como parceiro.
           </p>
           
-          {/* AI Search Box */}
-          <div className="mt-12 max-w-3xl mx-auto relative">
-            <div className="bg-white rounded-2xl shadow-xl overflow-hidden transition-all duration-300 focus-within:ring-4 focus-within:ring-yellow-400/50">
-              <form onSubmit={handleAiSearch} className="relative flex items-center h-16 sm:h-20">
-                <div className="pl-6 pr-4 flex items-center justify-center pointer-events-none">
-                  <Sparkles className="text-yellow-500 animate-pulse" size={24} />
-                </div>
-                <input
-                  type="text"
-                  className="w-full h-full py-4 text-lg text-gray-900 placeholder-gray-400 bg-transparent border-none focus:ring-0 outline-none"
-                  placeholder="Ex: Preciso de uma van no Tatuapé para o Colégio Agostiniano..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-                <div className="pr-2 sm:pr-3 pl-2">
-                  <Button 
-                    type="submit" 
-                    size="lg" 
-                    className="h-12 sm:h-14 px-6 sm:px-8 rounded-xl font-bold shadow-md bg-yellow-500 hover:bg-yellow-600 text-white border-none"
-                    disabled={isAiLoading}
-                  >
-                    {isAiLoading ? 'Buscando...' : 'Buscar'}
-                  </Button>
-                </div>
-              </form>
-            </div>
-            
-            {/* AI Result Area */}
-            {aiResponse && (
-              <div className="mt-6 bg-white/95 backdrop-blur-sm border-l-4 border-yellow-500 rounded-lg p-6 text-left shadow-lg animate-fade-in mx-2">
-                <p className="text-gray-800 font-medium text-lg leading-relaxed flex items-start">
-                  <Sparkles className="text-yellow-500 mr-3 mt-1 flex-shrink-0" size={20} />
-                  {aiResponse}
-                </p>
-              </div>
-            )}
-            
-            <p className="text-sm text-gray-300 mt-3 font-medium opacity-90 drop-shadow-md">
-              * Utilize a inteligência artificial para encontrar a melhor rota e motorista.
-            </p>
+          <div className="mt-10 flex justify-center gap-4">
+            <Button 
+              size="lg" 
+              className="rounded-full px-8 bg-yellow-500 hover:bg-yellow-600 text-white font-bold text-lg"
+              onClick={scrollToDrivers}
+            >
+              Encontrar Motorista
+            </Button>
+            <LinkButton 
+              to="/plans" 
+              variant="outline" 
+              size="lg" 
+              className="rounded-full px-8 bg-white/10 hover:bg-white/20 text-white border-white/30 backdrop-blur-sm"
+            >
+              Ver Planos
+            </LinkButton>
           </div>
 
           {/* Carousel Indicators */}
-          <div className="absolute bottom-[-60px] left-1/2 transform -translate-x-1/2 flex space-x-2">
+          <div className="absolute bottom-[-100px] left-1/2 transform -translate-x-1/2 flex space-x-2">
             {heroImages.map((_, index) => (
               <button
                 key={index}
@@ -206,7 +167,7 @@ export const Home: React.FC = () => {
       </div>
 
       {/* Drivers Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div id="drivers-list" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4">
           <h2 className="text-3xl font-bold text-gray-900">Encontre seu Motorista</h2>
           <LinkButton to="/register" variant="outline" size="sm">É motorista? Cadastre-se</LinkButton>
