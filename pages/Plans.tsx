@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button } from '../components/Button';
-import { Check, Star, Shield, Zap, HelpCircle } from 'lucide-react';
+import { Check, Star, Shield, HelpCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 export const Plans: React.FC = () => {
@@ -102,7 +102,7 @@ export const Plans: React.FC = () => {
               </p>
 
               <div className="mt-8 border-t border-gray-100 pt-8">
-                <FeatureItem text="Destaque na busca com IA" />
+                <FeatureItem text="Destaque na busca" />
                 <FeatureItem text="Gestão completa de manutenção" />
                 <FeatureItem text="Alertas via WhatsApp" />
                 <FeatureItem text="Clube de descontos completo" />

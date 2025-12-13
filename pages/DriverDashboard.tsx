@@ -3,7 +3,7 @@ import { Navigate } from 'react-router-dom';
 import { User, UserRole, MaintenanceRecord, MaintenanceType } from '../types';
 import { MOCK_MAINTENANCE_HISTORY } from '../constants';
 import { Button } from '../components/Button';
-import { Wrench, Gauge, Plus, Calendar, AlertTriangle, CheckCircle, Droplet, Disc, Truck, BellRing, Save, Filter, X, MessageCircle, Send, Smartphone } from 'lucide-react';
+import { Wrench, Gauge, Plus, Calendar, AlertTriangle, CheckCircle, Droplet, Disc, Truck, BellRing, Save, Filter, X, Send, Smartphone } from 'lucide-react';
 
 interface DriverDashboardProps {
   user: User | null;
@@ -102,10 +102,10 @@ export const DriverDashboard: React.FC<DriverDashboardProps> = ({ user }) => {
 
     setShowAddForm(false);
     
-    // Feedback de simulação do "Bot"
+    // Feedback
     let alertMsg = 'Manutenção registrada com sucesso!';
     if (newRecord.notifyWhatsapp) {
-      alertMsg += '\n\n🤖 BOT ATIVADO: O lembrete foi agendado! Nosso sistema enviará uma mensagem para seu WhatsApp quando a quilometragem estiver próxima.';
+      alertMsg += '\n\nNotificação: O lembrete foi agendado! Você receberá um alerta quando a quilometragem estiver próxima.';
     }
 
     alert(alertMsg);
@@ -338,7 +338,7 @@ export const DriverDashboard: React.FC<DriverDashboardProps> = ({ user }) => {
                            </label>
                         </div>
                         <p className="text-xs text-yellow-700 mt-2 leading-tight">
-                           * O bot enviará uma mensagem quando faltarem 10 dias ou 500km.
+                           * A notificação será enviada quando faltarem 10 dias ou 500km.
                         </p>
                      </div>
                   </div>
