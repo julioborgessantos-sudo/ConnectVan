@@ -74,7 +74,7 @@ export const MOCK_PARTNERS: Partner[] = [
     name: 'Papelaria Criativa',
     category: 'Papelaria',
     description: 'Material escolar completo das listas das escolas da região com descontos para pais e motoristas.',
-    photoUrl: 'https://images.unsplash.com/photo-1625047509168-a7026f36de04?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+    photoUrl: 'https://images.unsplash.com/photo-1601362840469-51e4d8d58785?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
     address: 'Rua Dona Margarida, 500 - Centro',
     phone: '(19) 3455-1111'
   },
