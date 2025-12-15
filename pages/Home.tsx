@@ -3,7 +3,7 @@ import { MOCK_DRIVERS, MOCK_PARTNERS, DEFAULT_HERO_IMAGES } from '../constants';
 import { DriverCard } from '../components/DriverCard';
 import { PartnerCard } from '../components/PartnerCard';
 import { Button } from '../components/Button';
-import { Search, Filter, School, MapPin, X, AlertCircle } from 'lucide-react';
+import { Search, Filter, School, MapPin, X, AlertCircle, Store } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export const Home: React.FC = () => {
@@ -11,10 +11,13 @@ export const Home: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [heroImages, setHeroImages] = useState<string[]>(DEFAULT_HERO_IMAGES);
 
-  // Filter State
+  // Driver Filter State
   const [selectedSchool, setSelectedSchool] = useState('');
   const [neighborhoodSearch, setNeighborhoodSearch] = useState('');
   const [inputError, setInputError] = useState('');
+
+  // Partner Filter State
+  const [selectedCategory, setSelectedCategory] = useState('Todas');
 
   // Load Hero Images from Local Storage on mount
   useEffect(() => {
@@ -37,7 +40,13 @@ export const Home: React.FC = () => {
     return Array.from(new Set(schools)).sort();
   }, []);
 
-  // Helper: Normalize text for consistent comparison (removes accents, lowercase, trims)
+  // Extract unique partner categories for the filter
+  const partnerCategories = useMemo(() => {
+    const categories = MOCK_PARTNERS.map(p => p.category);
+    return ['Todas', ...Array.from(new Set(categories)).sort()];
+  }, []);
+
+  // Helper: Normalize text for consistent comparison
   const normalizeText = (text: string) => {
     return text
       .normalize('NFD')
@@ -49,9 +58,6 @@ export const Home: React.FC = () => {
   // Helper: Validate Neighborhood Input
   const handleNeighborhoodChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    
-    // Regex allows letters (including accents), numbers, spaces, hyphens, and dots.
-    // Blocks special symbols like @#$%&*() which are invalid for neighborhood names.
     const isValid = /^[a-zA-Z0-9\s\-\.\u00C0-\u00FF]*$/.test(value);
 
     if (isValid || value === '') {
@@ -62,7 +68,7 @@ export const Home: React.FC = () => {
     }
   };
 
-  // Filter logic
+  // Filter Drivers logic
   const filteredDrivers = useMemo(() => {
     return MOCK_DRIVERS.filter(driver => {
       const matchesSchool = selectedSchool ? driver.schools.includes(selectedSchool) : true;
@@ -77,6 +83,14 @@ export const Home: React.FC = () => {
       return matchesSchool && matchesNeighborhood;
     });
   }, [selectedSchool, neighborhoodSearch]);
+
+  // Filter Partners logic
+  const filteredPartners = useMemo(() => {
+    if (selectedCategory === 'Todas') {
+      return MOCK_PARTNERS;
+    }
+    return MOCK_PARTNERS.filter(partner => partner.category === selectedCategory);
+  }, [selectedCategory]);
 
   const clearFilters = () => {
     setSelectedSchool('');
@@ -260,16 +274,47 @@ export const Home: React.FC = () => {
       {/* Partners Section (Public Preview) */}
       <div className="bg-white py-16 border-t border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
+          <div className="text-center mb-10">
             <h2 className="text-3xl font-bold text-gray-900">Nossos Parceiros</h2>
             <p className="text-gray-500 mt-3 text-lg">Empresas que confiam e apoiam o transporte escolar</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {MOCK_PARTNERS.map(partner => (
-              <PartnerCard key={partner.id} partner={partner} />
+          {/* Filtro de Parceiros por Categoria */}
+          <div className="flex flex-wrap justify-center gap-3 mb-10">
+            {partnerCategories.map(cat => (
+              <button
+                key={cat}
+                onClick={() => setSelectedCategory(cat)}
+                className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-200 transform hover:scale-105 ${
+                  selectedCategory === cat
+                    ? 'bg-blue-600 text-white shadow-md'
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200 border border-transparent'
+                }`}
+              >
+                {cat}
+              </button>
             ))}
           </div>
+
+          {/* Grid de Parceiros Filtrados */}
+          {filteredPartners.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {filteredPartners.map(partner => (
+                <PartnerCard key={partner.id} partner={partner} />
+              ))}
+            </div>
+          ) : (
+             <div className="text-center py-12 bg-gray-50 rounded-xl border border-dashed border-gray-200">
+               <Store size={40} className="mx-auto text-gray-300 mb-3" />
+               <h3 className="text-lg font-medium text-gray-900">Nenhum parceiro nesta categoria</h3>
+               <button 
+                  onClick={() => setSelectedCategory('Todas')}
+                  className="mt-2 text-blue-600 hover:text-blue-800 text-sm font-medium"
+                >
+                  Ver todos os parceiros
+                </button>
+             </div>
+          )}
         </div>
       </div>
     </div>

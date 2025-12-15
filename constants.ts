@@ -54,6 +54,67 @@ export const MOCK_DRIVERS: Driver[] = [
     rating: 5.0,
     phone: '(19) 99111-2233',
     bio: 'Pontualidade britânica e tratamento familiar. Vagas abertas para o período da tarde.'
+  },
+  // NOVOS MOTORISTAS
+  {
+    id: 'd5',
+    userId: 'u9',
+    name: 'Paulo Ricardo',
+    photoUrl: 'https://randomuser.me/api/portraits/men/41.jpg',
+    vehicle: 'Renault Master 2024',
+    route: 'Jd. Pérola - Santa Rita',
+    schools: ['E.E. Ulisses de Oliveira Valente', 'CIEP Leonel Brizola'],
+    rating: 4.9,
+    phone: '(19) 99222-3344',
+    bio: 'Especializado na região do Jd. Pérola e Santa Rita. Veículo novo com monitoramento por câmera.'
+  },
+  {
+    id: 'd6',
+    userId: 'u10',
+    name: 'Fernanda Costa',
+    photoUrl: 'https://randomuser.me/api/portraits/women/22.jpg',
+    vehicle: 'Mercedes Sprinter Escolar',
+    route: 'Jd. Esmeralda - Centro',
+    schools: ['Colégio Excelsior', 'SESI Ibatan'],
+    rating: 4.8,
+    phone: '(19) 99333-4455',
+    bio: 'Atendimento humanizado e carinhoso. Auxilio no embarque e desembarque seguro das crianças.'
+  },
+  {
+    id: 'd7',
+    userId: 'u11',
+    name: 'Ricardo Mendes',
+    photoUrl: 'https://randomuser.me/api/portraits/men/55.jpg',
+    vehicle: 'Citroën Jumper',
+    route: 'Romano - Laudissi',
+    schools: ['CAIC', 'E.E. Maria de Lourdes'],
+    rating: 4.6,
+    phone: '(19) 99444-5566',
+    bio: 'Rapidez e segurança para os bairros Romano e Laudissi. Preços especiais para irmãos.'
+  },
+  {
+    id: 'd8',
+    userId: 'u12',
+    name: 'Juliana Almeida',
+    photoUrl: 'https://randomuser.me/api/portraits/women/90.jpg',
+    vehicle: 'Fiat Ducato',
+    route: 'Pq. do Lago - Jd. das Orquídeas',
+    schools: ['ADI Geraldo Rocha', 'E.E. Neuza Maria'],
+    rating: 5.0,
+    phone: '(19) 99555-6677',
+    bio: 'Tia Ju leva e busca com amor! Vagas disponíveis para o período da manhã.'
+  },
+  {
+    id: 'd9',
+    userId: 'u13',
+    name: 'Marcelo Souza',
+    photoUrl: 'https://randomuser.me/api/portraits/men/12.jpg',
+    vehicle: 'Hyundai H350',
+    route: 'Vista Alegre - Pq. Residencial do Lago',
+    schools: ['Colégio Pilares', 'E.E. Heloisa L. Furlan'],
+    rating: 4.7,
+    phone: '(19) 99666-7788',
+    bio: 'Experiência de 15 anos no transporte escolar em Santa Bárbara. Confiabilidade é o nosso lema.'
   }
 ];
 
@@ -74,7 +135,7 @@ export const MOCK_PARTNERS: Partner[] = [
     name: 'Papelaria Criativa',
     category: 'Papelaria',
     description: 'Material escolar completo das listas das escolas da região com descontos para pais e motoristas.',
-    photoUrl: 'https://images.unsplash.com/photo-1601362840469-51e4d8d58785?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+    photoUrl: 'https://images.unsplash.com/photo-1544816155-12df9643f363?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
     address: 'Rua Dona Margarida, 500 - Centro',
     phone: '(19) 3455-1111'
   },
@@ -87,6 +148,57 @@ export const MOCK_PARTNERS: Partner[] = [
     photoUrl: 'https://images.unsplash.com/photo-1601362840469-51e4d8d58785?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
     address: 'Av. Monte Castelo, 800 - Jd. Primavera',
     phone: '(19) 3455-2222'
+  },
+  // NOVOS PARCEIROS
+  {
+    id: 'p4',
+    userId: 'u14',
+    name: 'Auto Peças Santa Bárbara',
+    category: 'Auto Peças',
+    description: 'Tudo para sua van: filtros, óleos, peças de motor e acessórios com preços de atacado.',
+    photoUrl: 'https://images.unsplash.com/photo-1486262715619-01b80258e0b5?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+    address: 'Rua do Ósmio, 999 - Mollon',
+    phone: '(19) 3457-8888'
+  },
+  {
+    id: 'p5',
+    userId: 'u15',
+    name: 'Borracharia do Zé',
+    category: 'Borracharia',
+    description: 'Atendimento emergencial 24h para vans escolares. Pneus novos e remoldados.',
+    photoUrl: 'https://images.unsplash.com/photo-1516962215378-7fa2e137ae93?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+    address: 'Av. São Paulo, 1500 - Cidade Nova',
+    phone: '(19) 99123-4567'
+  },
+  {
+    id: 'p6',
+    userId: 'u16',
+    name: 'Uniformes Escolares & Cia',
+    category: 'Vestuário',
+    description: 'Uniformes de todas as escolas estaduais e particulares de SBO. Bordados personalizados.',
+    photoUrl: 'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+    address: 'Rua Riachuelo, 400 - Centro',
+    phone: '(19) 3463-5555'
+  },
+  {
+    id: 'p7',
+    userId: 'u17',
+    name: 'Elétrica Automotiva Tivoli',
+    category: 'Auto Elétrica',
+    description: 'Reparo em alternadores, arranques e instalação de som e câmeras para vans.',
+    photoUrl: 'https://images.unsplash.com/photo-1487754180451-c456f719a1fc?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+    address: 'Rua da Agricultura, 200 - Jd. Pérola',
+    phone: '(19) 3458-9999'
+  },
+  {
+    id: 'p8',
+    userId: 'u18',
+    name: 'Livraria e Papelaria Saber',
+    category: 'Papelaria',
+    description: 'Livros didáticos e paradidáticos com desconto exclusivo para usuários VanConnect.',
+    photoUrl: 'https://images.unsplash.com/photo-1521791136064-7985c2d11f62?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+    address: 'Av. Tiradentes, 850 - Jd. Primavera',
+    phone: '(19) 3455-7777'
   }
 ];
 
@@ -120,6 +232,26 @@ export const MOCK_DISCOUNTS: Discount[] = [
     percentageOff: 15,
     code: 'LIMPA15',
     expiryDate: '2024-11-30'
+  },
+  {
+    id: 'disc4',
+    partnerId: 'p4',
+    partnerName: 'Auto Peças Santa Bárbara',
+    title: 'Filtros de Ar',
+    description: '20% de desconto em filtros de ar para toda linha Diesel.',
+    percentageOff: 20,
+    code: 'FILTRO20',
+    expiryDate: '2024-12-31'
+  },
+  {
+    id: 'disc5',
+    partnerId: 'p6',
+    partnerName: 'Uniformes Escolares & Cia',
+    title: 'Volta às Aulas',
+    description: '10% de desconto na compra do kit completo de uniforme.',
+    percentageOff: 10,
+    code: 'AULAS10',
+    expiryDate: '2025-02-28'
   }
 ];
 

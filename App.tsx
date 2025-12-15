@@ -10,6 +10,7 @@ import { AdminDashboard } from './pages/AdminDashboard';
 import { Plans } from './pages/Plans';
 import { authService } from './services/authService';
 import { User } from './types';
+import { supabase, isSupabaseConfigured } from './lib/supabase';
 
 // Placeholder Footer
 const Footer = () => (
@@ -22,11 +23,31 @@ const Footer = () => (
 
 const App: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
+  const [loadingSession, setLoadingSession] = useState(true);
 
   useEffect(() => {
-    // Check for persisted session
-    const currentUser = authService.getCurrentUser();
-    setUser(currentUser);
+    // 1. Verifica sessão inicial
+    authService.getCurrentSession().then((sessionUser) => {
+      setUser(sessionUser);
+      setLoadingSession(false);
+    });
+
+    // 2. Escuta mudanças de autenticação (login, logout, token refresh)
+    // Apenas se o Supabase estiver configurado para evitar erros de API Key
+    if (isSupabaseConfigured) {
+      const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
+        if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+          const currentUser = await authService.getCurrentSession();
+          setUser(currentUser);
+        } else if (event === 'SIGNED_OUT') {
+          setUser(null);
+        }
+      });
+
+      return () => {
+        authListener.subscription.unsubscribe();
+      };
+    }
   }, []);
 
   const handleLoginSuccess = (loggedUser: User) => {
@@ -37,6 +58,14 @@ const App: React.FC = () => {
     await authService.logout();
     setUser(null);
   };
+
+  if (loadingSession) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-yellow-500"></div>
+      </div>
+    );
+  }
 
   return (
     <Router>

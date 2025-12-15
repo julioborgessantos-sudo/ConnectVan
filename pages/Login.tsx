@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { Button } from '../components/Button';
 import { authService } from '../services/authService';
 import { User, UserRole } from '../types';
-import { Truck, Lock, Mail, AlertCircle } from 'lucide-react';
+import { Truck, Lock, Mail, AlertCircle, CheckCircle, X } from 'lucide-react';
 
 interface LoginProps {
   onLoginSuccess: (user: User) => void;
@@ -15,6 +15,7 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,30 +26,47 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
       const user = await authService.login(email, password);
       onLoginSuccess(user);
       
-      // Redirecionamento baseado no papel do usuário
-      switch (user.role) {
-        case UserRole.ADMIN:
-          navigate('/admin');
-          break;
-        case UserRole.DRIVER:
-          navigate('/dashboard');
-          break;
-        case UserRole.PARTNER:
-        case UserRole.CLIENT:
-          navigate('/partners-area');
-          break;
-        default:
-          navigate('/');
-      }
+      // Em vez de redirecionar imediatamente, mostramos o modal de sucesso
+      setShowSuccessModal(true);
+
     } catch (err: any) {
+      console.error(err);
       setError(err.message || 'Falha no login. Verifique suas credenciais.');
     } finally {
       setIsLoading(false);
     }
   };
 
+  const handleGoHome = () => {
+    navigate('/');
+  };
+
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative">
+      
+      {/* Modal de Sucesso */}
+      {showSuccessModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm animate-fade-in">
+          <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-sm w-full mx-4 text-center transform transition-all scale-100 border-4 border-green-50">
+            <div className="mx-auto flex items-center justify-center h-20 w-20 rounded-full bg-green-100 mb-6">
+              <CheckCircle className="h-10 w-10 text-green-600" />
+            </div>
+            
+            <h3 className="text-2xl font-bold text-gray-900 mb-2">Parabéns!</h3>
+            <p className="text-gray-600 mb-8">
+              Login realizado e cadastro verificado com sucesso. Bem-vindo ao VanConnect!
+            </p>
+            
+            <Button 
+              onClick={handleGoHome}
+              className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 text-lg shadow-lg"
+            >
+              Ir para a Home
+            </Button>
+          </div>
+        </div>
+      )}
+
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <div className="flex justify-center">
           <div className="bg-yellow-400 p-3 rounded-xl">
@@ -160,11 +178,14 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
                 <div className="w-full border-t border-gray-300" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">Credenciais de Teste</span>
+                <span className="px-2 bg-white text-gray-500">Exemplos de Usuários</span>
               </div>
             </div>
 
             <div className="mt-6 grid grid-cols-1 gap-2 text-xs text-gray-500 bg-gray-50 p-4 rounded-lg">
+              <p className="mb-2 text-gray-600 italic">
+                Nota: Para o login funcionar, cadastre-se na aba "Criar conta" ou crie estes usuários no seu Supabase:
+              </p>
               <p><span className="font-bold">Motorista:</span> roberto@exemplo.com / 123456</p>
               <p><span className="font-bold">Responsável:</span> pai@exemplo.com / 123456</p>
               <p><span className="font-bold">Parceiro:</span> oficina@parceiro.com / 123456</p>
