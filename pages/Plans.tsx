@@ -1,13 +1,12 @@
 import React from 'react';
 import { Button } from '../components/Button';
-import { Check, Star, Shield, HelpCircle } from 'lucide-react';
+import { Check, Star, Shield, HelpCircle, Store, Zap, Heart } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 export const Plans: React.FC = () => {
   const navigate = useNavigate();
 
   const handleSubscribe = (planName: string, price: string) => {
-    // Simulação de checkout
     const confirm = window.confirm(
       `Você selecionou o plano ${planName}.\n\nValor: ${price}\n\nDeseja prosseguir para a área de pagamento seguro?`
     );
@@ -23,12 +22,12 @@ export const Plans: React.FC = () => {
     }
   };
 
-  const FeatureItem = ({ text }: { text: string }) => (
+  const FeatureItem = ({ text, dark = false }: { text: string; dark?: boolean }) => (
     <div className="flex items-start mb-4">
       <div className="flex-shrink-0">
-        <Check className="h-5 w-5 text-green-500" />
+        <Check className={`h-5 w-5 ${dark ? 'text-indigo-400' : 'text-green-500'}`} />
       </div>
-      <p className="ml-3 text-sm text-gray-600">{text}</p>
+      <p className={`ml-3 text-sm ${dark ? 'text-indigo-100' : 'text-gray-600'}`}>{text}</p>
     </div>
   );
 
@@ -39,21 +38,20 @@ export const Plans: React.FC = () => {
         <div className="relative z-10 max-w-4xl mx-auto">
           <h2 className="text-base font-semibold tracking-wide text-yellow-500 uppercase">Investimento no seu negócio</h2>
           <p className="mt-2 text-4xl font-extrabold sm:text-5xl sm:tracking-tight lg:text-6xl">
-            Escolha o plano ideal para sua Van
+            Sua Van em <span className="text-yellow-500">Destaque</span>
           </p>
           <p className="max-w-xl mt-5 mx-auto text-xl text-gray-300">
-            Aumente sua visibilidade, gerencie manutenções e economize com nossos parceiros.
+            Aumente sua visibilidade, gerencie manutenções e conecte-se com novos alunos.
           </p>
         </div>
         
-        {/* Background decorative elements */}
         <div className="absolute top-0 left-0 -ml-20 -mt-20 w-64 h-64 rounded-full bg-yellow-500 opacity-10 blur-3xl"></div>
         <div className="absolute bottom-0 right-0 -mr-20 -mb-20 w-80 h-80 rounded-full bg-blue-600 opacity-10 blur-3xl"></div>
       </div>
 
-      {/* Pricing Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-16 pb-24 relative z-20">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      {/* Driver Pricing Section */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-16 pb-12 relative z-20">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
           
           {/* Plano Gratuito */}
           <div className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 flex flex-col border border-gray-100">
@@ -71,7 +69,6 @@ export const Plans: React.FC = () => {
                 <FeatureItem text="Visibilidade na busca básica" />
                 <FeatureItem text="Painel de manutenção simples" />
                 <FeatureItem text="Acesso limitado a parceiros" />
-                <FeatureItem text="Perfil básico do motorista" />
               </div>
             </div>
             <div className="p-8 bg-gray-50 rounded-b-2xl border-t border-gray-100">
@@ -102,11 +99,10 @@ export const Plans: React.FC = () => {
               </p>
 
               <div className="mt-8 border-t border-gray-100 pt-8">
-                <FeatureItem text="Destaque na busca" />
+                <FeatureItem text="Destaque na busca por bairro" />
                 <FeatureItem text="Gestão completa de manutenção" />
-                <FeatureItem text="Alertas via WhatsApp" />
                 <FeatureItem text="Clube de descontos completo" />
-                <FeatureItem text="Perfil verificado com fotos" />
+                <FeatureItem text="Perfil com fotos e bio" />
               </div>
             </div>
             <div className="p-8 bg-gray-50 rounded-b-2xl border-t border-gray-100">
@@ -135,20 +131,14 @@ export const Plans: React.FC = () => {
                 <span className="text-5xl font-extrabold tracking-tight">R$ 599</span>
                 <span className="ml-1 text-2xl font-semibold text-gray-500">,99</span>
               </p>
-              <p className="mt-2 text-sm text-green-600 font-bold">Economize 25% comparado ao semestral</p>
-              <p className="mt-6 text-gray-500 text-sm">
-                A solução definitiva. Máxima visibilidade e todos os recursos liberados.
-              </p>
+              <p className="mt-2 text-sm text-green-600 font-bold">Economize 25% anual</p>
 
-              <div className="mt-8 border-t border-gray-100 pt-8 space-y-4">
-                <div className="flex items-start">
-                    <div className="flex-shrink-0"><Shield className="h-5 w-5 text-yellow-500" /></div>
-                    <p className="ml-3 text-sm font-medium text-gray-900">Tudo do plano Semestral</p>
-                </div>
+              <div className="mt-8 border-t border-gray-100 pt-8 space-y-2">
                 <FeatureItem text="Prioridade máxima nas buscas" />
-                <FeatureItem text="Selo 'Motorista Premium'" />
-                <FeatureItem text="Suporte prioritário" />
-                <FeatureItem text="Acesso antecipado a novos parceiros" />
+                <FeatureItem text="Selo 'Motorista Premium' no perfil" />
+                <FeatureItem text="Alertas via WhatsApp ilimitados" />
+                <FeatureItem text="Acesso antecipado a promoções" />
+                <FeatureItem text="Suporte prioritário 24h" />
               </div>
             </div>
             <div className="p-8 bg-yellow-50 rounded-b-2xl border-t border-yellow-100">
@@ -156,31 +146,86 @@ export const Plans: React.FC = () => {
                 className="w-full py-4 text-lg font-bold bg-yellow-500 hover:bg-yellow-600 text-white shadow-lg"
                 onClick={() => handleSubscribe('Anual', 'R$ 599,99')}
               >
-                Quero o Plano Anual
+                Ativar Plano Anual
               </Button>
-              <p className="text-xs text-center text-gray-500 mt-3">Pagamento 100% seguro via Cartão ou PIX</p>
+            </div>
+          </div>
+        </div>
+
+        {/* --- PARTNER SECTION --- */}
+        <div className="relative mt-20">
+          <div className="absolute inset-0 flex items-center" aria-hidden="true">
+            <div className="w-full border-t border-gray-300"></div>
+          </div>
+          <div className="relative flex justify-center">
+            <span className="px-6 bg-gray-50 text-xl font-bold text-gray-500 flex items-center">
+              <Store className="mr-2" /> Para Empresas e Parceiros
+            </span>
+          </div>
+        </div>
+
+        <div className="mt-12 flex justify-center">
+          <div className="bg-indigo-900 rounded-3xl shadow-2xl overflow-hidden max-w-4xl w-full flex flex-col md:flex-row border border-indigo-700">
+            <div className="p-10 md:w-2/3 text-white">
+              <div className="flex items-center space-x-2 mb-4">
+                 <Zap className="text-yellow-400" size={24} />
+                 <span className="text-indigo-300 font-bold tracking-widest uppercase text-xs">Oportunidade de Negócio</span>
+              </div>
+              <h3 className="text-3xl font-extrabold mb-4">Plano Business Anual</h3>
+              <p className="text-indigo-100 mb-8 leading-relaxed">
+                Divulgue seus serviços diretamente para centenas de motoristas e milhares de pais em Santa Bárbara d'Oeste e região.
+              </p>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1">
+                <FeatureItem text="Painel de Gestão de Cupons" dark />
+                <FeatureItem text="Destaque no Mapa de Parceiros" dark />
+                <FeatureItem text="Métricas de Cliques e Visitas" dark />
+                <FeatureItem text="Link direto para seu WhatsApp" dark />
+                <FeatureItem text="Selo de Parceiro Oficial" dark />
+                <FeatureItem text="Apoio ao Transporte Escolar" dark />
+              </div>
+            </div>
+            
+            <div className="bg-indigo-800 p-10 md:w-1/3 flex flex-col justify-center items-center text-center border-l border-indigo-700">
+              <p className="text-indigo-200 text-sm font-medium mb-1">Assinatura Anual</p>
+              <div className="flex items-baseline text-white">
+                <span className="text-2xl font-bold">R$</span>
+                <span className="text-6xl font-extrabold mx-1">99</span>
+                <span className="text-2xl font-bold">,90</span>
+              </div>
+              <p className="text-indigo-300 text-sm mt-1 mb-8">por mês</p>
+              
+              <Button 
+                onClick={() => handleSubscribe('Parceiro Business', 'R$ 99,90/mês (Anual)')}
+                className="w-full bg-white text-indigo-900 hover:bg-indigo-50 font-bold py-4 rounded-xl shadow-xl transition-transform active:scale-95"
+              >
+                Seja um Parceiro
+              </Button>
+              <p className="text-indigo-400 text-[10px] mt-4 uppercase font-bold tracking-tighter">Faturamento anual: R$ 1.198,80</p>
             </div>
           </div>
         </div>
       </div>
 
       {/* FAQ Section */}
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 mt-12">
         <h2 className="text-2xl font-bold text-gray-900 text-center mb-8 flex items-center justify-center">
             <HelpCircle className="mr-2 text-gray-400" /> Perguntas Frequentes
         </h2>
         <div className="space-y-6">
-            <div className="bg-white p-6 rounded-lg shadow-sm">
-                <h4 className="font-bold text-gray-900">O que acontece após os 3 meses gratuitos?</h4>
-                <p className="text-gray-600 mt-2 text-sm">Seu perfil será automaticamente inativado e deixará de aparecer nas buscas até que você escolha um dos planos pagos (Semestral ou Anual). Não há cobrança automática.</p>
+            <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                <h4 className="font-bold text-gray-900">Sou empresa, como funciona o plano de 99,90?</h4>
+                <p className="text-gray-600 mt-2 text-sm">Este plano é exclusivo para oficinas, papelarias, borracharias e outros serviços. Ele permite que você anuncie ofertas no "Clube de Vantagens" que todos os usuários do app visualizam.</p>
             </div>
-            <div className="bg-white p-6 rounded-lg shadow-sm">
-                <h4 className="font-bold text-gray-900">Como funcionam os descontos com parceiros?</h4>
-                <p className="text-gray-600 mt-2 text-sm">Basta apresentar seu painel de motorista logado no estabelecimento parceiro para garantir descontos em oficinas, peças e serviços.</p>
+            <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                <h4 className="font-bold text-gray-900">O que acontece após os 3 meses gratuitos para motoristas?</h4>
+                <p className="text-gray-600 mt-2 text-sm">Seu perfil será pausado. Você poderá reativá-lo a qualquer momento escolhendo o plano Semestral ou Anual. Seus dados de manutenção não são apagados.</p>
             </div>
-             <div className="bg-white p-6 rounded-lg shadow-sm">
-                <h4 className="font-bold text-gray-900">Posso cancelar a qualquer momento?</h4>
-                <p className="text-gray-600 mt-2 text-sm">Sim, porém os planos Semestral e Anual são pagos antecipadamente. O cancelamento evita a renovação automática, mas o valor pago não é reembolsável.</p>
+             <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                <h4 className="font-bold text-gray-900 flex items-center">
+                  <Heart size={16} className="text-red-500 mr-2" /> O VanConnect cobra comissão?
+                </h4>
+                <p className="text-gray-600 mt-2 text-sm">Não cobramos nenhuma comissão sobre os contratos de transporte ou sobre as vendas dos parceiros. Somos uma plataforma de conexão por assinatura fixa.</p>
             </div>
         </div>
       </div>

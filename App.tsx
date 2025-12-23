@@ -10,13 +10,12 @@ import { AdminDashboard } from './pages/AdminDashboard';
 import { Plans } from './pages/Plans';
 import { authService } from './services/authService';
 import { User } from './types';
-import { supabase, isSupabaseConfigured } from './lib/supabase';
 
 // Placeholder Footer
 const Footer = () => (
   <footer className="bg-gray-800 text-white py-8">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-      <p className="text-gray-400">&copy; 2024 VanConnect. Todos os direitos reservados.</p>
+      <p className="text-gray-400">&copy; 2024 VanConnect. Todos os direitos reservados. (Modo Demonstração)</p>
     </div>
   </footer>
 );
@@ -26,28 +25,11 @@ const App: React.FC = () => {
   const [loadingSession, setLoadingSession] = useState(true);
 
   useEffect(() => {
-    // 1. Verifica sessão inicial
+    // Verifica sessão inicial via localStorage (Mock)
     authService.getCurrentSession().then((sessionUser) => {
       setUser(sessionUser);
       setLoadingSession(false);
     });
-
-    // 2. Escuta mudanças de autenticação (login, logout, token refresh)
-    // Apenas se o Supabase estiver configurado para evitar erros de API Key
-    if (isSupabaseConfigured) {
-      const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
-        if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
-          const currentUser = await authService.getCurrentSession();
-          setUser(currentUser);
-        } else if (event === 'SIGNED_OUT') {
-          setUser(null);
-        }
-      });
-
-      return () => {
-        authListener.subscription.unsubscribe();
-      };
-    }
   }, []);
 
   const handleLoginSuccess = (loggedUser: User) => {

@@ -12,29 +12,29 @@ export const PartnerCard: React.FC<PartnerCardProps> = ({ partner }) => {
   const whatsappUrl = `https://wa.me/55${cleanPhone}?text=Olá, vi sua empresa no VanConnect e gostaria de saber mais sobre seus serviços.`;
 
   return (
-    <div className="group bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 overflow-hidden flex flex-col h-full transform hover:-translate-y-1">
+    <div className="group bg-white rounded-3xl shadow-md hover:shadow-2xl hover:shadow-blue-500/10 transition-all duration-500 border border-gray-100 overflow-hidden flex flex-col h-full transform hover:-translate-y-3 hover:rotate-1 hover:scale-[1.02] cursor-pointer">
       {/* Área da Imagem com efeito de Zoom */}
       <div className="relative h-56 overflow-hidden">
         <img 
           src={partner.photoUrl} 
           alt={partner.name} 
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+          className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-60"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-60"></div>
         
         {/* Badge da Categoria */}
         <div className="absolute top-4 left-4">
-          <span className="bg-white/90 backdrop-blur-md text-blue-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm flex items-center">
-            <Store size={12} className="mr-1" />
+          <span className="bg-white/95 backdrop-blur-md text-blue-800 text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-widest shadow-sm flex items-center">
+            <Store size={12} className="mr-1.5" />
             {partner.category}
           </span>
         </div>
       </div>
       
       {/* Conteúdo do Card */}
-      <div className="p-6 flex flex-col flex-grow">
+      <div className="p-6 flex flex-col flex-grow relative bg-white">
         <div className="mb-4">
-          <h3 className="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
+          <h3 className="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors duration-300">
             {partner.name}
           </h3>
           <p className="text-gray-500 text-sm mt-2 line-clamp-2 leading-relaxed">
@@ -43,28 +43,28 @@ export const PartnerCard: React.FC<PartnerCardProps> = ({ partner }) => {
         </div>
         
         <div className="space-y-3 mb-6 mt-auto">
-          <div className="flex items-start text-gray-600 text-sm">
-            <MapPin size={16} className="text-blue-500 mt-0.5 mr-2 flex-shrink-0" />
-            <span>{partner.address}</span>
+          <div className="flex items-start text-gray-600 text-xs">
+            <MapPin size={14} className="text-blue-500 mt-0.5 mr-2 flex-shrink-0" />
+            <span className="line-clamp-1">{partner.address}</span>
           </div>
         </div>
 
         {/* Botões de Ação */}
-        <div className="grid grid-cols-2 gap-3 pt-4 border-t border-gray-100">
+        <div className="grid grid-cols-2 gap-3 pt-5 border-t border-gray-100">
           <a 
             href={`tel:${partner.phone}`}
-            className="flex items-center justify-center py-2.5 px-4 rounded-lg bg-gray-50 text-gray-700 font-medium text-sm hover:bg-gray-100 transition-colors border border-gray-200"
+            className="flex items-center justify-center py-2.5 px-4 rounded-xl bg-gray-50 text-gray-700 font-bold text-xs hover:bg-gray-100 transition-colors border border-gray-200"
           >
-            <Phone size={16} className="mr-2" />
+            <Phone size={14} className="mr-2" />
             Ligar
           </a>
           <a 
             href={whatsappUrl}
             target="_blank" 
             rel="noopener noreferrer"
-            className="flex items-center justify-center py-2.5 px-4 rounded-lg bg-green-500 text-white font-medium text-sm hover:bg-green-600 shadow-sm hover:shadow-md transition-all"
+            className="flex items-center justify-center py-2.5 px-4 rounded-xl bg-green-500 text-white font-bold text-xs hover:bg-green-600 shadow-sm hover:shadow-green-500/20 transition-all"
           >
-            <MessageCircle size={16} className="mr-2" />
+            <MessageCircle size={14} className="mr-2" />
             WhatsApp
           </a>
         </div>

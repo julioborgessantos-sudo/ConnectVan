@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Button } from '../components/Button';
 import { authService } from '../services/authService';
-import { User, UserRole } from '../types';
-import { Truck, Lock, Mail, AlertCircle, CheckCircle, X } from 'lucide-react';
+import { User } from '../types';
+import { Truck, Lock, Mail, AlertCircle, CheckCircle } from 'lucide-react';
 
 interface LoginProps {
   onLoginSuccess: (user: User) => void;
@@ -17,6 +17,19 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
   const [error, setError] = useState('');
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
+  // Redirecionamento automático após 3 segundos quando o modal de sucesso aparece
+  useEffect(() => {
+    let timer: number;
+    if (showSuccessModal) {
+      timer = window.setTimeout(() => {
+        navigate('/');
+      }, 3000);
+    }
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
+  }, [showSuccessModal, navigate]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -26,7 +39,7 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
       const user = await authService.login(email, password);
       onLoginSuccess(user);
       
-      // Em vez de redirecionar imediatamente, mostramos o modal de sucesso
+      // Mostra o modal de sucesso
       setShowSuccessModal(true);
 
     } catch (err: any) {
@@ -37,14 +50,10 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
     }
   };
 
-  const handleGoHome = () => {
-    navigate('/');
-  };
-
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative">
       
-      {/* Modal de Sucesso */}
+      {/* Modal de Sucesso com Redirecionamento Automático */}
       {showSuccessModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm animate-fade-in">
           <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-sm w-full mx-4 text-center transform transition-all scale-100 border-4 border-green-50">
@@ -53,16 +62,16 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
             </div>
             
             <h3 className="text-2xl font-bold text-gray-900 mb-2">Parabéns!</h3>
-            <p className="text-gray-600 mb-8">
+            <p className="text-gray-600 mb-6">
               Login realizado e cadastro verificado com sucesso. Bem-vindo ao VanConnect!
             </p>
+
+            <div className="flex flex-col items-center text-sm text-gray-400 font-medium">
+              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-green-600 mb-2"></div>
+              <p>Redirecionando em instantes...</p>
+            </div>
             
-            <Button 
-              onClick={handleGoHome}
-              className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 text-lg shadow-lg"
-            >
-              Ir para a Home
-            </Button>
+            {/* Botão removido conforme solicitado para fluxo automático */}
           </div>
         </div>
       )}
@@ -184,7 +193,7 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
 
             <div className="mt-6 grid grid-cols-1 gap-2 text-xs text-gray-500 bg-gray-50 p-4 rounded-lg">
               <p className="mb-2 text-gray-600 italic">
-                Nota: Para o login funcionar, cadastre-se na aba "Criar conta" ou crie estes usuários no seu Supabase:
+                Nota: Use estas credenciais para testar as diferentes visões:
               </p>
               <p><span className="font-bold">Motorista:</span> roberto@exemplo.com / 123456</p>
               <p><span className="font-bold">Responsável:</span> pai@exemplo.com / 123456</p>

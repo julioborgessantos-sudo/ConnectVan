@@ -1,95 +1,57 @@
-import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { User, UserRole } from '../types';
 import { MOCK_USER_ADMIN, MOCK_USER_CLIENT, MOCK_USER_DRIVER, MOCK_USER_PARTNER } from '../constants';
 
-const mapSessionToUser = async (sessionUser: any): Promise<User | null> => {
-  if (!sessionUser) return null;
-
-  try {
-    const { data: profile, error } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', sessionUser.id)
-      .single();
-
-    if (error || !profile) {
-      return {
-        id: sessionUser.id,
-        email: sessionUser.email || '',
-        name: sessionUser.user_metadata?.name || 'Usuário',
-        role: (sessionUser.user_metadata?.role as UserRole) || UserRole.CLIENT,
-      };
-    }
-
-    return {
-      id: profile.id,
-      name: profile.name,
-      email: profile.email,
-      role: profile.role as UserRole,
-      avatarUrl: profile.avatar_url
-    };
-  } catch (err) {
-    console.error('Erro ao mapear sessão:', err);
-    return null;
-  }
-};
+// Simulação de persistência de sessão local
+const SESSION_KEY = 'vanconnect_mock_user';
 
 export const authService = {
   login: async (email: string, password: string): Promise<User> => {
-    if (isSupabaseConfigured) {
-      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) {
-        // Fallback para mocks apenas se falhar no Supabase e for um usuário conhecido de teste
-        const isMock = ['admin@vanconnect.com', 'roberto@exemplo.com', 'pai@exemplo.com', 'oficina@parceiro.com'].includes(email);
-        if (!isMock) throw error;
-      } else if (data.user) {
-        const mapped = await mapSessionToUser(data.user);
-        if (mapped) return mapped;
-      }
+    // Simulação de delay de rede
+    await new Promise(resolve => setTimeout(resolve, 800));
+
+    let user: User | null = null;
+
+    if (email === 'admin@vanconnect.com' && password === 'admin123') user = MOCK_USER_ADMIN;
+    else if (email === 'roberto@exemplo.com' && password === '123456') user = MOCK_USER_DRIVER;
+    else if (email === 'pai@exemplo.com' && password === '123456') user = MOCK_USER_CLIENT;
+    else if (email === 'oficina@parceiro.com' && password === '123456') user = MOCK_USER_PARTNER;
+
+    if (user) {
+      localStorage.setItem(SESSION_KEY, JSON.stringify(user));
+      return user;
     }
 
-    // Fallback Mock (Modo Demo)
-    if (email === 'admin@vanconnect.com' && password === 'admin123') return MOCK_USER_ADMIN;
-    if (email === 'roberto@exemplo.com' && password === '123456') return MOCK_USER_DRIVER;
-    if (email === 'pai@exemplo.com' && password === '123456') return MOCK_USER_CLIENT;
-    if (email === 'oficina@parceiro.com' && password === '123456') return MOCK_USER_PARTNER;
-
-    throw new Error('Credenciais inválidas.');
+    throw new Error('Credenciais inválidas. Tente os usuários de exemplo listados abaixo.');
   },
 
   register: async (name: string, email: string, password: string, role: UserRole): Promise<User> => {
-    if (!isSupabaseConfigured) throw new Error('Supabase não configurado.');
-
-    const { data: authData, error: authError } = await supabase.auth.signUp({
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    // Simula a criação de um novo usuário
+    const newUser: User = {
+      id: Math.random().toString(36).substr(2, 9),
+      name,
       email,
-      password,
-      options: { data: { name, role } }
-    });
+      role,
+      avatarUrl: `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random`
+    };
 
-    if (authError) throw authError;
-    if (!authData.user) throw new Error('Erro ao criar usuário.');
-
-    // Salva na tabela public.profiles
-    const { error: profileError } = await supabase.from('profiles').insert([
-      { id: authData.user.id, name, email, role }
-    ]);
-
-    if (profileError) {
-      console.error("Erro ao criar perfil na tabela profiles:", profileError);
-      // O usuário já foi criado no Auth, então não bloqueamos o retorno, 
-      // mas o perfil pode precisar de correção manual no DB.
-    }
-
-    return { id: authData.user.id, name, email, role };
+    // Em modo mock, apenas retornamos sucesso. 
+    // Em um app real sem backend, poderíamos salvar em uma lista no localStorage.
+    return newUser;
   },
 
   logout: async (): Promise<void> => {
-    if (isSupabaseConfigured) await supabase.auth.signOut();
+    localStorage.removeItem(SESSION_KEY);
   },
 
   getCurrentSession: async (): Promise<User | null> => {
-    if (!isSupabaseConfigured) return null;
-    const { data: { session } } = await supabase.auth.getSession();
-    return session?.user ? await mapSessionToUser(session.user) : null;
+    const stored = localStorage.getItem(SESSION_KEY);
+    if (!stored) return null;
+    try {
+      return JSON.parse(stored);
+    } catch {
+      return null;
+    }
   }
 };
