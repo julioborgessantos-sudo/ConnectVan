@@ -8,6 +8,7 @@ import { Login } from './pages/Login';
 import { DriverDashboard } from './pages/DriverDashboard';
 import { AdminDashboard } from './pages/AdminDashboard';
 import { Plans } from './pages/Plans';
+import { Checkout } from './pages/Checkout';
 import { authService } from './services/authService';
 import { User } from './types';
 
@@ -61,6 +62,7 @@ const App: React.FC = () => {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/plans" element={<Plans />} />
+            <Route path="/checkout" element={<Checkout />} />
             <Route 
               path="/login" 
               element={<Login onLoginSuccess={handleLoginSuccess} />} 

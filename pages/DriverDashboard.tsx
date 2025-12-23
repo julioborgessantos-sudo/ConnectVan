@@ -3,7 +3,7 @@ import { Navigate } from 'react-router-dom';
 import { User, UserRole, MaintenanceRecord, MaintenanceType } from '../types';
 import { MOCK_MAINTENANCE_HISTORY } from '../constants';
 import { Button } from '../components/Button';
-import { Wrench, Gauge, Plus, Calendar, AlertTriangle, CheckCircle, Droplet, Disc, Truck, BellRing, Save, Filter, X, Send, Smartphone, ChevronDown } from 'lucide-react';
+import { Wrench, Gauge, Plus, Calendar, AlertTriangle, CheckCircle, Droplet, Disc, Truck, BellRing, Save, Filter, X, Send, Smartphone, ChevronDown, Edit3 } from 'lucide-react';
 
 interface DriverDashboardProps {
   user: User | null;
@@ -22,6 +22,7 @@ export const DriverDashboard: React.FC<DriverDashboardProps> = ({ user }) => {
   // Estado do formulário
   const [newRecord, setNewRecord] = useState({
     type: 'OLEO' as MaintenanceType,
+    otherTypeDetail: '',
     date: new Date().toISOString().split('T')[0],
     km: currentKm,
     description: '',
@@ -115,18 +116,34 @@ export const DriverDashboard: React.FC<DriverDashboardProps> = ({ user }) => {
 
   const handleAddMaintenance = (e: React.FormEvent) => {
     e.preventDefault();
+    const finalDescription = newRecord.type === 'OUTROS' ? newRecord.otherTypeDetail : newRecord.description;
+    
     const record: MaintenanceRecord = {
       id: Math.random().toString(36).substr(2, 9),
       type: newRecord.type,
       date: newRecord.date,
       km: Number(newRecord.km),
-      description: newRecord.description,
+      description: finalDescription || 'Manutenção registrada',
       cost: Number(newRecord.cost),
       nextDueKm: newRecord.nextDueKm ? Number(newRecord.nextDueKm) : undefined
     };
 
     setMaintenanceList([record, ...maintenanceList]);
     if (record.km > currentKm) setCurrentKm(record.km);
+    
+    // Reset form
+    setNewRecord({
+      type: 'OLEO',
+      otherTypeDetail: '',
+      date: new Date().toISOString().split('T')[0],
+      km: record.km,
+      description: '',
+      cost: '',
+      nextDueKm: '',
+      notifyWhatsapp: false,
+      notifyEmail: false
+    });
+    
     setShowAddForm(false);
     alert('Manutenção registrada com sucesso!');
   };
@@ -134,7 +151,8 @@ export const DriverDashboard: React.FC<DriverDashboardProps> = ({ user }) => {
   const sendWhatsAppReminder = (record: MaintenanceRecord) => {
     if (!record.nextDueKm) return;
     const remaining = record.nextDueKm - currentKm;
-    const text = `🚐 *Lembrete VanConnect* 🚐\nA manutenção de *${record.type}* está próxima.\n📅 Realizada em: ${new Date(record.date).toLocaleDateString()}\n🔢 Próxima: ${record.nextDueKm.toLocaleString()} km\n⚠️ Restam: ${remaining.toLocaleString()} km`;
+    const typeLabel = record.type === 'OUTROS' ? record.description : record.type;
+    const text = `🚐 *Lembrete VanConnect* 🚐\nA manutenção de *${typeLabel}* está próxima.\n📅 Realizada em: ${new Date(record.date).toLocaleDateString()}\n🔢 Próxima: ${record.nextDueKm.toLocaleString()} km\n⚠️ Restam: ${remaining.toLocaleString()} km`;
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
   };
 
@@ -269,7 +287,7 @@ export const DriverDashboard: React.FC<DriverDashboardProps> = ({ user }) => {
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-1">Tipo</label>
                     <select 
-                      className="w-full rounded-lg border-gray-300 shadow-sm py-2.5 px-3 bg-white"
+                      className="w-full rounded-lg border-gray-300 shadow-sm py-2.5 px-3 bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all"
                       value={newRecord.type}
                       onChange={(e) => setNewRecord({...newRecord, type: e.target.value as MaintenanceType})}
                     >
@@ -280,6 +298,23 @@ export const DriverDashboard: React.FC<DriverDashboardProps> = ({ user }) => {
                       <option value="OUTROS">Outros</option>
                     </select>
                   </div>
+                  
+                  {newRecord.type === 'OUTROS' && (
+                    <div className="animate-fade-in">
+                      <label className="block text-sm font-semibold text-gray-700 mb-1 flex items-center">
+                        <Edit3 size={14} className="mr-1 text-blue-500" /> Especifique a Manutenção
+                      </label>
+                      <input 
+                        type="text" 
+                        required 
+                        placeholder="Ex: Ar Condicionado, Alarme, Lanternagem..."
+                        className="w-full rounded-lg border-gray-300 shadow-sm py-2.5 px-3 bg-white focus:ring-2 focus:ring-blue-500 outline-none"
+                        value={newRecord.otherTypeDetail}
+                        onChange={(e) => setNewRecord({...newRecord, otherTypeDetail: e.target.value})}
+                      />
+                    </div>
+                  )}
+
                   <div>
                      <label className="block text-sm font-semibold text-gray-700 mb-1">Data</label>
                      <input type="date" required className="w-full rounded-lg border-gray-300 shadow-sm py-2.5 px-3 bg-white" value={newRecord.date} onChange={(e) => setNewRecord({...newRecord, date: e.target.value})} />
@@ -330,7 +365,12 @@ export const DriverDashboard: React.FC<DriverDashboardProps> = ({ user }) => {
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center">
                           {getIconByType(record.type)}
-                          <span className="ml-2 text-sm text-gray-700 font-semibold">{record.type}</span>
+                          <div className="ml-2 flex flex-col">
+                            <span className="text-sm text-gray-700 font-semibold">{record.type}</span>
+                            {record.type === 'OUTROS' && (
+                              <span className="text-[10px] text-gray-400 italic">({record.description})</span>
+                            )}
+                          </div>
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 font-mono">
@@ -352,7 +392,7 @@ export const DriverDashboard: React.FC<DriverDashboardProps> = ({ user }) => {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right">
                         {record.nextDueKm && (
-                          <button onClick={() => sendWhatsAppReminder(record)} className="text-green-600 hover:text-green-800 p-1">
+                          <button onClick={() => sendWhatsAppReminder(record)} className="text-green-600 hover:text-green-800 p-1" title="Enviar Lembrete WhatsApp">
                             <Send size={18} />
                           </button>
                         )}
